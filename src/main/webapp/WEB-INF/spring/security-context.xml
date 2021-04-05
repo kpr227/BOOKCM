@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.0.xsd">
+
+	<!-- ERROR Handler 추가 -->
+	<!-- <bean id="customAccessDenied" class="org.zerock.security.CustomAccessDeniedHandler" /> -->
+	
+<!-- Login Success Handler 추가 -->
+<!-- <bean id="customLoginSuccess" class="org.zerock.security.CustomLoginSuccessHandler" /> -->
+
+	<!-- MemberVO 구현 Class -->
+	<!-- <bean id="customUserDetailsService" class="org.zerock.security.CustomUserDetailsService" /> -->
+	
+
+	<!-- bcrypt PASSWORD ENCODER -->
+	<!-- <bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" /> -->
+	
+
+	<!--속성 1) auto-config : true 로 할경우 filter는 dafault 값으로 동작한다. -->
+	<!--속성 2) use-expressions : 스프링 표현식(spEL)의 사용여부 -->
+	<!-- <security:http auto-config="true" use-expressions="false" /> -->
+	<!-- 	<security:http auto-config="true" use-expressions="true"> -->
+
+	<!-- 로그인처리 -->
+	<!-- <security:form-login login-page="/customLogin" /> -->
+
+	<!-- 데이터베이스를 이용하는 자동 로그인 -->
+	<!-- <security:remember-me data-source-ref="dataSource" token-validity-seconds="604800 "/> -->
+	
+	<!-- 자동로그인 기능 상요후 쿠키 삭제[로그아웃] -->		
+	<!-- <security:logout logout-url="/customLogout"	invalidate-session="true" delete-cookies="remember-me, JSESSION_ID"/> -->
+		
+	<!-- 스프링 시큐리티의 csrf 설정 -->
+	<!-- <security:csrf disabled="true" /> -->
+
+	<!-- ERROR페이지를 지정할 수 있다		#url: http://localhost:8080/sample30/admin# -->
+	<!-- <security:access-denied-handler error-page="/accessError" /> -->
+
+	<!-- ERROR Handler를 사용했을 때	#url: http://localhost:8080/accessError-->
+		<!-- <security:access-denied-handler ref="customAccessDenied" /> -->
+		
+		
+	<!-- </security:http> -->
+
+	
+	<!--AuthenticatonManager란? : 인증에 대한 부분은  처리  -->
+	<!-- 
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="customUserDetailsService" > 
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+ 	-->
+
+	
+</beans>
