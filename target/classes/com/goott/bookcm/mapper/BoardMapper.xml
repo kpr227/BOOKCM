@@ -4,5 +4,42 @@
 <!-- package명이 포함된 인터페이스 이름을 설정합니다. -->
 <mapper namespace="com.goott.bookcm.mapper.BoardMapper">
 	
+	<!-- 전체 게시물 읽어오기 -->
+	<select id="getList" resultType="com.goott.bookcm.domain.BoardVO">
+		SELECT * FROM bookcm.board
+		WHERE board_yn = 'Y'
+	</select>
+	
+	<!-- 게시물 생성 -->
+	<insert id="createBoard">
+		INSERT INTO bookcm.board
+		VALUES (bookcm.seq_bno.nextval, #{title}, #{content}, #{colList}, #{writer},
+		default, default, #{writer}, default, default, default )
+	</insert>
+	
+	<!-- 개별 게시물 읽기 -->
+	<select id="getBoard" resultType="com.goott.bookcm.domain.BoardVO">
+		SELECT * FROM bookcm.board
+		WHERE bno = #{bno}
+	</select>
+	
+	<!-- 게시물 수정 -->
+	<update id="modBoard">
+		UPDATE bookcm_board 
+		SET title = #{title},
+			content = #{content},
+			colList = #{colList},
+			editDate = default
+		WHERE bno = #{bno}
+	</update>
+	
+	
+	<!-- 게시물 삭제 -->
+	<update id="delBoard">
+		UPDATE bookcm_board 
+		SET board_yn = 'N'
+		WHERE bno = #{bno}
+	</update>
+	
 	
 </mapper>

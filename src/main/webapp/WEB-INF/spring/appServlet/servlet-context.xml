@@ -28,7 +28,9 @@
 	
 	<context:annotation-config />
 	
-	<context:component-scan base-package="com.goott.bookcm" />
+	<context:component-scan base-package="com.goott.bookcm.controller" />
+	<context:component-scan base-package="com.goott.bookcm.service" />
+	<context:component-scan base-package="com.goott.bookcm.domain" />
 	
 	<!-- security 어노테이션 활성화 -->
 	<!-- <security:global-method-security pre-post-annotations="enabled" secured-annotations="enabled"/> -->
@@ -37,5 +39,7 @@
 
 	<!-- AOP 기능 활성화 -->
 	<aop:aspectj-autoproxy />
+	
+	
 	
 </beans:beans>

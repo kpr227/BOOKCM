@@ -15,6 +15,12 @@
 		</init-param>
 	</filter>
 	
+<!-- UTF-8 스프링을 이용한 인코딩 필터 mapping 설정 -->
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	
 	<!-- Security 인코딩 필터 설정 -->
 <!-- 	
 	<filter>
@@ -23,11 +29,7 @@
 	</filter> 
 -->
 	
-	<!-- UTF-8 스프링을 이용한 인코딩 필터 mapping 설정 -->
-	<filter-mapping>
-		<filter-name>encodingFilter</filter-name>
-		<url-pattern>/*</url-pattern>
-	</filter-mapping>
+
 	
 	<!-- Security 인코딩 필터 mapping 설정 -->
 <!-- 	
