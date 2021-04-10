@@ -14,11 +14,13 @@ public interface BoardService {
 	//개별 게시물 읽기
 	public BoardVO getBoard(Long bno);
 	
-	//게시물 수정
+	//게시물 수정 
 	public int modBoard(BoardVO boardVO);
 	
 	//게시물 삭제
 	public int delBoard(Long bno);
-		
+	
+	//게시물 추천
+	public int upThumbs(Long bno);
 	
 }

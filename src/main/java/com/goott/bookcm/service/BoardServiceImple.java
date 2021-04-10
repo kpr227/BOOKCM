@@ -22,25 +22,42 @@ public class BoardServiceImple implements BoardService{
 	//게시물 생성
 	@Override
 	public int createBoard(BoardVO boardVO) {
-		return boardMapper.createBoard();
+		return boardMapper.createBoard(boardVO);
 	}
 
 	//개별 게시물 읽기
 	@Override
 	public BoardVO getBoard(Long bno) {
-		return boardMapper.getBoard();
+		//조회수 올리기
+		boardMapper.upWatch(bno);
+		//게시물 올리기
+		return boardMapper.getBoard(bno);
 	}
 
 	//게시물 수정
 	@Override
 	public int modBoard(BoardVO boardVO) {
-		return boardMapper.modBoard();
+		return boardMapper.modBoard(boardVO);
 	}
 
 	//게시물 삭제
 	@Override
 	public int delBoard(Long bno) {
-		return boardMapper.delBoard();
+		return boardMapper.delBoard(bno);
+	}
+
+	//게시물 추천
+	@Override
+	public int upThumbs(Long bno) {
+		int result ; 
+		
+		if( boardMapper.upThumbs(bno) ==1 && boardMapper.historyThumbs(bno)==1 ) {
+			result = boardMapper.getThumbs(bno);
+		}else{
+			result = 0;
+		}
+		
+		return result;
 	}
 
 

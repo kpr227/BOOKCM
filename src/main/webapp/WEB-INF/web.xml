@@ -28,9 +28,7 @@
 		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
 	</filter> 
 -->
-	
 
-	
 	<!-- Security 인코딩 필터 mapping 설정 -->
 <!-- 	
 	<filter-mapping>
@@ -71,6 +69,10 @@
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+		</init-param>
+		<init-param>
+			<param-name>throwExceptionIfNoHandlerFound</param-name>
+			<param-value>true</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 		

@@ -41,7 +41,7 @@
 <script src="${contextPath}/resources/javascript/board.js?v=<%=System.currentTimeMillis() %>"></script>
 <script src="${contextPath}/resources/javascript/time.js?v=<%=System.currentTimeMillis() %>"></script>
 <script>
-/* 페이지 이동시 자동 list 이동 */
+//페이지 이동시 자동 list 이동
 $(document).ready(function() {
 	var page=1;
 	board.getList(
@@ -69,11 +69,11 @@ function boardChat(data){
 	var colList="";
 	
 	for(var i=0; i<data.boardVO.length; i++){
-		if(data.boardVO[i].colList == 1){colList="공지사항";}
-		else if(data.boardVO[i].colList == 2){colList="추천";}
-		else if(data.boardVO[i].colList == 3){colList="나눔";}
-		else if(data.boardVO[i].colList == 4){colList="일반";}
-		else if(data.boardVO[i].colList == 5){colList="문의";}
+		if(data.boardVO[i].colList == 0){colList="공지사항";}
+		else if(data.boardVO[i].colList == 1){colList="추천";}
+		else if(data.boardVO[i].colList == 2){colList="나눔";}
+		else if(data.boardVO[i].colList == 3){colList="일반";}
+		else if(data.boardVO[i].colList == 4){colList="문의";}
 		else{colList="error";}
 		
 		str	+="<tr>" 

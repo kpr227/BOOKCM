@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,13 +42,13 @@ public class BoardController {
 		System.out.println("memverVO:" +memVO);
 	}
 	
-	
+	/* 전제 게시물 출력 */
 	@GetMapping(value="/list",
 		consumes = {"application/json; charset=UTF-8"}, 
 		produces = {"application/json; charset=utf-8"})
 		//produces = {"text/plain; charset=utf-8"})
 	public ResponseEntity<Map<String,Object>> getList(){
-		log.info("------BoardController");
+		log.info("------getList Controller");
 		
 		// -- test
 		//BoardVO boardVO = new BoardVO();
@@ -59,5 +62,37 @@ public class BoardController {
 		
 		return new ResponseEntity<>(ListMap,HttpStatus.OK);	
 	}
+	
+	@PostMapping(value="/modify",
+		consumes = {"application/json; charset=UTF-8"}, 
+		produces = {"text/plain; charset=utf-8"})
+	public ResponseEntity<String> modBoard(@RequestBody BoardVO boardVO){
+		log.info("------modBoard Controller");
+		
+		// -- test
+		System.out.println("boardVO: "+boardVO);
+
+		return boardService.modBoard(boardVO)==1
+				? new ResponseEntity<>("modify-success",HttpStatus.OK)
+				: new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	/* 특정 게시물 추천 */
+	@PostMapping(value="/upThumbs",
+		consumes = {"application/json; charset=UTF-8"}, 
+		produces = {"application/json; charset=UTF-8"})
+	public ResponseEntity<Object> upThumbs(@RequestBody Long bno){
+		log.info("------upThumbs Controller");
+		// -- test
+		System.out.println("bno: "+bno);
+
+		//--- Map mapping
+		int result = boardService.upThumbs(bno);
+		System.out.println("-----게시물의 추천수: "+result);
+		return result == 0
+				? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
+				: new ResponseEntity<>(result,HttpStatus.OK);
+	}
+	
 	
 }

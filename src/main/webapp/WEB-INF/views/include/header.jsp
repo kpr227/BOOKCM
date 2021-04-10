@@ -48,6 +48,9 @@
 		display: flex;
 		margin: auto;
 	}
+	.checkBtn-confirm {
+		display: none;
+	}
 	</style>
 
 </head>

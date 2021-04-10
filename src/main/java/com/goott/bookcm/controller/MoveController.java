@@ -1,11 +1,13 @@
 package com.goott.bookcm.controller;
 
-import org.apache.maven.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.goott.bookcm.service.BoardService;
+
 
 @Controller
 public class MoveController {
@@ -19,8 +21,8 @@ public class MoveController {
 	}
 	
 	@RequestMapping(value="/board/list")
-	public void listMove() {
-		
+	public void listMove(Model model) {
+
 	}
 	
 	@RequestMapping(value="/board/test")
@@ -29,8 +31,14 @@ public class MoveController {
 	}
 	
 	@RequestMapping(value="/board/get")
-	public String getMove(Long bno, Model model) {
-		boardService.getBoard(bno);
+	public String getMove(@RequestParam Long bno, Model model) {
+		//test
+		//BoardVO bordVO = new BoardVO();
+		//bordVO = boardService.getBoard(bno);
+		//System.out.println("boarVO란?: "+bordVO);
+		
+		//실행
+		model.addAttribute("boardVO",boardService.getBoard(bno));
 		return "/board/get";
 	}
 }

@@ -10,6 +10,12 @@
 		WHERE board_yn = 'Y'
 	</select>
 	
+	<!-- 개별 게시물 읽기 -->
+	<select id="getBoard" resultType="com.goott.bookcm.domain.BoardVO">
+		SELECT * FROM bookcm.board
+		WHERE bno = #{bno} and board_yn = 'Y'
+	</select>
+	
 	<!-- 게시물 생성 -->
 	<insert id="createBoard">
 		INSERT INTO bookcm.board
@@ -17,15 +23,9 @@
 		default, default, #{writer}, default, default, default )
 	</insert>
 	
-	<!-- 개별 게시물 읽기 -->
-	<select id="getBoard" resultType="com.goott.bookcm.domain.BoardVO">
-		SELECT * FROM bookcm.board
-		WHERE bno = #{bno}
-	</select>
-	
 	<!-- 게시물 수정 -->
 	<update id="modBoard">
-		UPDATE bookcm_board 
+		UPDATE bookcm.board 
 		SET title = #{title},
 			content = #{content},
 			colList = #{colList},
@@ -33,13 +33,40 @@
 		WHERE bno = #{bno}
 	</update>
 	
-	
 	<!-- 게시물 삭제 -->
 	<update id="delBoard">
-		UPDATE bookcm_board 
+		UPDATE bookcm.board 
 		SET board_yn = 'N'
 		WHERE bno = #{bno}
 	</update>
+
+	<!-- 조회수 up -->
+	<update id="upWatch">
+		UPDATE bookcm.board
+		set watchNumber = watchNumber+1
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 추천수 up -->
+	<update id="upThumbs">
+		UPDATE bookcm.board
+		set thumbsNumber = thumbsNumber+1
+		WHERE bno = #{bno}
+	</update>
+	
+	<!-- 추천수 History 추가 -->
+	<update id="historyThumbs">
+		INSERT INTO bookcm.thumbsHistory
+		VALUES (#{bno}, 'member0', default )
+	</update>
+	
+	<!-- 조회수 정보가져오기 -->
+	<select id="getThumbs" resultType="int">
+		SELECT thumbsNumber
+		FROM bookcm.board
+		WHERE bno = #{bno}
+	</select>
+	
 	
 	
 </mapper>
