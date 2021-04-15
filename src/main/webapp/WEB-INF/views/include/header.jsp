@@ -36,21 +36,41 @@
 	<!-- jQuery -->
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	
-	<!-- Page level plugins -->
-	<%-- <script src="${contextPath}/resources/vendor/chart.js/Chart.min.js"></script> --%>
-	
-	<!-- Page level custom scripts -->
-<%-- 	<script src="${contextPath}/resources/js/demo/chart-area-demo.js"></script>
-	<script src="${contextPath}/resources/js/demo/chart-pie-demo.js"></script> --%>
+	<!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
 	
 	<style type="text/css">
-	.userBind {
-		display: flex;
-		margin: auto;
-	}
-	.checkBtn-confirm {
-		display: none;
-	}
+		.userBind {
+			display: flex;
+			/* margin: auto; */
+		}
+		.checkBtn-confirm{
+			display: none;
+		}
+		
+		.data-dis{
+			display: none;
+		}
+		
+		.uploadResult{
+			width:100%;
+			background-color:#8181F7;
+		}
+		.uploadResult ul{
+			display : flex;
+			flex-flow : row;
+			justify-content : center;
+			align-items : center;
+		}
+		.uploadResult ul li{
+			list-style : none;
+			padding 10px;
+		}
+		.uploadResult ul li img{
+			width: 200px;
+			hieght: 200px;
+		}
+
 	</style>
 
 </head>
@@ -398,3 +418,6 @@
 
 				</nav>
 				<!-- End of Topbar -->
+<!-- </div></div></div></body></html> -->
+				
+				

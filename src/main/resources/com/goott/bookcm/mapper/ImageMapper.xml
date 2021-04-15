@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+	
+<!-- package명이 포함된 인터페이스 이름을 설정합니다. -->
+
+<mapper namespace="com.goott.bookcm.mapper.ImageMapper">
+	<!-- 이미지 등록 -->
+	<insert id="regImage">
+		INSERT INTO bookcm.image
+		VALUES( #{uuid}, #{uploadPath}, #{fileName}, #{fileType}, #{bno} )
+	</insert>
+	
+	<!-- bno에 등록된 이미지 찾기 -->
+	<select id="getImageBno" resultType="com.goott.bookcm.domain.ImageVO">
+		SELECT * 
+		FROM bookcm.image
+		WHERE bno = #{bno}
+	</select>
+	
+	<!-- bno에 등록된 사진 지우기 -->
+	<delete id="delImgae">
+		DELETE 
+		FROM bookcm.image 
+		WHERE uuid = #{uuid}
+	</delete>
+	
+	<!-- bno에 등록된 사진 모두 지우기 -->
+	<delete id="delAllImgae">
+		DELETE 
+		FROM bookcm.image 
+		WHERE bno = #{bno}
+	</delete>
+	<!--  -->
+	
+	<!--  -->
+	
+</mapper>

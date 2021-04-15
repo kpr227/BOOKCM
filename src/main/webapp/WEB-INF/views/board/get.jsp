@@ -48,7 +48,14 @@
 					<div style="margin:auto; text-align:center;">
 						<img src="${contextPath}/resources/img/nonThumbs.jpg" id="thumbs" alt="recommend" width="10%" height="10%">
 					</div>
-					
+				</div>
+				<div class="form-group">
+					<label>첨부파일</label>
+					<span class="checkBtn-confirm uploadDiv">
+						<input type="file" class="form-control-file" id="uploadFile" name="uploadFile" multiple>
+					</span>
+					<div class="form-group uploadResult"></div>
+					 
 				</div><hr/>
 				<div class="form-group">
 					<div class="userBind">
@@ -78,30 +85,124 @@
 		</div>
 		<!-- 모달창 -->
 		<!-- openForm -->
-		<form id="getForm" action="" method="post">
+		<form id="getForm" action="" method="get">
+			<input type="hidden" name="pageNum" value="${cri.pageNum}">
+			<input type="hidden" name="amount" value="${cri.amount}">
+			<input type="hidden" name="type" value="${cri.type}">
+			<input type="hidden" name="keyword" value="${cri.keyword}">
 		</form>
 	</div>
 </div>
 
+<!-- header.jsp -->
+</div></div></div>
 
-<a class="scroll-to-top rounded" href="#page-top"> <i
-	class="fas fa-angle-up"></i>
-</a>
 <script src="${contextPath}/resources/javascript/board.js?v=<%=System.currentTimeMillis() %>"></script>
+<script src="${contextPath}/resources/javascript/image.js?v=<%=System.currentTimeMillis() %>"></script>
 <script src="${contextPath}/resources/javascript/time.js?v=<%=System.currentTimeMillis() %>"></script>
 <script>
 
-//bno
-var bno_value = ${boardVO.bno};
-//form
-var getForm = $("#getForm");
+var bno_value = ${boardVO.bno}; //bno
+var getForm = $("#getForm");	//form
+var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");	// 파일 유효성 검사
+var maxSize = 5242880;		//최대 파일 등록
+var clonObj = $(".uploadDiv").clone();	//파일 첨부 리셋
+var uploadResult = $(".uploadResult");	//파일 chat
+
+$(document).ready(function(){
+	//var bno = $("#bno").val();
+	//console.log(bno_value);
+	//alert(typeof(bno_value));
+	image.getImage(
+		bno_value,
+		function(list){
+			showUploadFile(list);
+		}
+	)
+});
+
+
+/* 이미지 출력 */
+function showUploadFile(imageFile){
+	if(!imageFile || imageFile.length == 0) {return};
+	
+	var str = "<ul>";
+	
+	$(imageFile).each(function(i,imageObj){
+		console.log(imageObj.uuid);
+		console.log(imageObj.fileName);
+		console.log(imageObj.uploadPath);
+		//alert(obj.image);
+		var fileCallPath = encodeURIComponent(imageObj.uploadPath+"/"+imageObj.uuid+"_"+imageObj.fileName);
+		var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+		
+		if(!imageObj.fileType || imageObj.fileType=="file"){
+			str +="<li data-path='"+imageObj.uploadPath+"' data-uuid='"+imageObj.uuid+"'"
+				+ "		data-fileName='"+imageObj.fileName+"' data-type='file'>"
+				+ "	<img src='/resources/img/file.png'><br/>"+ imageObj.fileName
+				+ "	<span class='checkBtn-imageSelect'> "
+				+ "	<button type='button' class='btn btn-danger btn-circle data-dis' "
+				+ "			data-file=\'"+fileCallPath+"\' data-type='file'>"
+				+ "		<i class='fa fa-times'></i>"
+				+ "	</button>"
+				+ "</span>"
+				+"</li>";
+		}else{
+			//str += "<li>"+ obj.fileName +"&nbsp;&nbsp; </li>";
+			var fileCallPath_s = encodeURIComponent(imageObj.uploadPath+"/s_"+imageObj.uuid+"_"+imageObj.fileName);		
+			var originPath=imageObj.uploadPath+"\\"+imageObj.uuid+"_"+imageObj.fileName;
+			
+			originPath = originPath.replace(new RegExp(/\\/g),"/");
+			str +="<li data-path='"+imageObj.uploadPath+"' data-uuid='"+imageObj.uuid+"'"
+				+ "		data-fileName='"+imageObj.fileName+"' data-type='image'>"
+				+ "	<img src='/display?fileName="+fileCallPath_s+"'><br/>"+imageObj.fileName +"&nbsp;&nbsp;"
+				+ "	<span class='checkBtn-imageSelect' data-fileCallPath='"+fileCallPath_s+"'> "
+				+ "<input type='hidden' class='fileCallPath' value='"+fileCallPath_s+"'>"
+				+ "	<button type='button' class='btn btn-danger btn-circle data-dis'"
+				+ "			data-file=\'"+fileCallPath+"\' data-type='image'>"
+				+ "		<i class='fa fa-times'></i>"
+				+ "	</button></span>"
+				+ "</li>";
+			
+		}
+	});
+	
+	str += "</ul>"
+		uploadResult.append(str);
+}
+
+/* 파일 삭제 */
+$(".uploadResult").on("click","span", function(e){
+	var targetFile = $(this).data("fileName");
+	console.log("fileName의 값은?: "+targetFile);
+	var type=$(this).data("type");
+	console.log("type의 값은?: "+type);
+
+	//$.ajax({
+	//	url:"/deleteFile",
+	//	data: {fileName:targetFile, type:type},
+	//	dataType:'text',
+	//	type: "POST",	
+	//	success:function(result){
+	//		alert("삭제 완료"+result);
+	//	}
+		
+	//}) //END $.ajax
+	
+});
 
 //수정버튼 선택
 $("#btn_modify").on("click", function(){
+	
+	//버튼
 	$(".checkBtn-select").css("display","none");
 	$(".checkBtn-confirm").css("display","block");
+	//image버튼
+	$(".data-dis").css("display","inline");
 	
+	//disabled-> 수정가능하게
 	$(".data-mod").attr("disabled",false);
+	
 });
 
 //확인버튼 선택
@@ -145,6 +246,8 @@ $("#btn_cancel").on("click", function(){
 	//버튼
 	$(".checkBtn-select").css("display","block");
 	$(".checkBtn-confirm").css("display","none");
+	//image버튼
+	$(".data-dis").css("display","none");
 	
 	//input: disabled -변경
 	$(".data-mod").attr("disabled",true);

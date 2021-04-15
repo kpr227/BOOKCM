@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.goott.bookcm.domain.BoardVO;
+import com.goott.bookcm.domain.ImageVO;
 import com.goott.bookcm.domain.MemberVO;
 import com.goott.bookcm.service.BoardService;
 import com.goott.bookcm.service.MemberService;
@@ -35,6 +37,7 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 	
+
 	@RequestMapping(value="/test1")
 	public void main() {
 		MemberVO memVO = new MemberVO();
@@ -44,8 +47,8 @@ public class BoardController {
 	
 	/* 전제 게시물 출력 */
 	@GetMapping(value="/list",
-		consumes = {"application/json; charset=UTF-8"}, 
-		produces = {"application/json; charset=utf-8"})
+		consumes = {"application/json; charset=UTF-8"}, //수신 하고자하는 데이터 포맷을 정의한다.
+		produces = {"application/json; charset=utf-8"})	//출력하고자 하는 데이터 포맷을 정의한다.
 		//produces = {"text/plain; charset=utf-8"})
 	public ResponseEntity<Map<String,Object>> getList(){
 		log.info("------getList Controller");
@@ -63,6 +66,7 @@ public class BoardController {
 		return new ResponseEntity<>(ListMap,HttpStatus.OK);	
 	}
 	
+	/* 특정 게시물 수정 */
 	@PostMapping(value="/modify",
 		consumes = {"application/json; charset=UTF-8"}, 
 		produces = {"text/plain; charset=utf-8"})
@@ -93,6 +97,22 @@ public class BoardController {
 				? new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR)
 				: new ResponseEntity<>(result,HttpStatus.OK);
 	}
+	
+	/* 특정 게시물의 첨부파일 찾기 */
+	@PostMapping(value="/findImageBno",
+		consumes = {"application/json; charset=UTF-8"},
+		produces = {"application/json; charset=UTF-8"})
+	public ResponseEntity<List<ImageVO>>findImageBno(@RequestBody Long bno){
+		System.out.println("====bno: "+bno);
+		// --- test
+		List<ImageVO> list = new ArrayList<ImageVO>();
+		list = boardService.getImgaeList(bno);
+		System.out.println("list: "+list);
+		
+		return new ResponseEntity<>(boardService.getImgaeList(bno), HttpStatus.OK);
+		
+	}
+			
 	
 	
 }
