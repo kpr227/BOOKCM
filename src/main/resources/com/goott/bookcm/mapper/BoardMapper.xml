@@ -4,13 +4,13 @@
 <!-- package명이 포함된 인터페이스 이름을 설정합니다. -->
 <mapper namespace="com.goott.bookcm.mapper.BoardMapper">
 	
-	<!-- 전체 게시물 읽어오기 paging처리 x search x -->
+	<!-- 전체 게시물 읽어오기 paging처리 x search x colList x -->
 	<select id="getList" resultType="com.goott.bookcm.domain.BoardVO">
 		SELECT * FROM bookcm.board
 		WHERE board_yn = 'Y'
 	</select>
 	
-	<!-- 전체 게시물 읽어오기 paging처리 o search x -->
+	<!-- 전체 게시물 읽어오기 paging처리 o search x colList x -->
 	<select id="getList_p" resultType="com.goott.bookcm.domain.BoardVO">
 	<![CDATA[
 		SELECT b.*
@@ -23,7 +23,7 @@
 	]]>
 	</select>
 	
-	<!-- 전체 게시물 읽어오기 paging처리 o search o -->
+	<!-- 전체 게시물 읽어오기 paging처리 o search o colList x -->
 	<select id="getList_ps" resultType="com.goott.bookcm.domain.BoardVO">
 	<![CDATA[
 		SELECT b.*
@@ -56,14 +56,49 @@
 	]]>
 	</select>
 	
-	<!-- 게시물 갯수 찾기 search x-->
+	<!-- 전체 게시물 읽어오기 paging처리 o search o colList o -->
+	<select id="getList_psc" resultType="com.goott.bookcm.domain.BoardVO">
+	<![CDATA[
+		SELECT b.*
+		FROM (
+		  SELECT /*+ INDEX_DESC(a pk_bno) */ rownum rn, a.*
+		  FROM board a
+		  WHERE colList = #{colList} and
+	]]>
+	<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+		<foreach item="type" collection="typeArr">
+			<trim prefix="OR">
+				<choose>
+					<when test="type == 'T'.toString()">
+						title like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'C'.toString()">
+						content like '%'||#{keyword}||'%'
+					</when>
+					<when test="type == 'W'.toString()">
+						writer like '%'||#{keyword}||'%'
+					</when>
+				</choose>
+			</trim>
+		</foreach>	
+	</trim>
+	<![CDATA[	
+			rownum <= #{pageNum} * #{amount}
+		) b
+		WHERE b.rn >= ((#{pageNum} * #{amount})-(#{amount} - 1)) 
+			and board_yn='Y'
+	]]>
+	</select>
+	
+	
+	<!-- 게시물 갯수 찾기 search x colList x -->
 	<select id="getTotalBoard" resultType="int">
 		SELECT count(*)
 		FROM bookcm.board
 		WHERE board_yn='Y'
 	</select>
 	
-	<!-- 게시물 갯수 찾기 -->
+	<!-- 게시물 갯수 찾기 search o colList x -->
 	<select id="getTotalBoard_s" resultType="int">
 		SELECT count(bno)
 		FROM bookcm.board
@@ -86,6 +121,32 @@
 			</foreach>	
 		</trim>
 		board_yn='Y'
+	</select>
+	
+	<!-- 게시물 갯수 찾기 search o colList o -->
+	<select id="getTotalBoard_sc" resultType="int">
+		SELECT count(bno)
+		FROM bookcm.board
+		WHERE 
+		<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+			<foreach item="type" collection="typeArr">
+				<trim prefix="OR">
+					<choose>
+						<when test="type == 'T'.toString()">
+							title like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'C'.toString()">
+							content like '%'||#{keyword}||'%'
+						</when>
+						<when test="type == 'W'.toString()">
+							writer like '%'||#{keyword}||'%'
+						</when>
+					</choose>
+				</trim>
+			</foreach>	
+		</trim>
+		board_yn = 'Y' and
+		colList = #{colList}
 	</select>
 	
 	<!-- 개별 게시물 읽기 -->
@@ -137,10 +198,21 @@
 		WHERE bno = #{bno}
 	</update>
 	
+	<!-- 추천수 History에 존재하는가 -->
+	<select id="existThumbs" resultType="String">
+		SELECT CASE WHEN count(writer) != 1 THEN 'true' ELSE 'false' END as result
+		from (
+			SELECT a.*
+			FROM thumbsHistory a
+			WHERE bno = #{bno}
+		)b
+		WHERE writer = #{loginId};
+	</select>
+	
 	<!-- 추천수 History 추가 -->
 	<update id="historyThumbs">
 		INSERT INTO bookcm.thumbsHistory
-		VALUES (#{bno}, 'member0', default )
+		VALUES (#{bno}, #{loginId}, default )
 	</update>
 	
 	<!-- 조회수 정보가져오기 -->

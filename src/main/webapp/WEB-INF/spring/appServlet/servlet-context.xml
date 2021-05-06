@@ -40,7 +40,11 @@
 
 	<!-- AOP 기능 활성화 -->
 	<aop:aspectj-autoproxy />
+	<task:annotation-driven />
 	
+	<!-- schedular 활성화 -->
+	<task:scheduler id="clearUploadRepoJobScheduler" pool-size="10" /> 
+ 	<!-- <task:annotation-driven scheduler="clearUploadRepoJobScheduler" /> --> 
 	
 	
 </beans:beans>

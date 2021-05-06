@@ -8,4 +8,57 @@
 		select * from member
 	</select>
 	
+	<!-- id가 존재하는가?-->
+	<select id="existId" resultType="String">
+		SELECT 
+			CASE WHEN count(id)=1 then 'TRUE' else 'FALSE' end as exist  
+		FROM bookcm.member
+		WHERE id = #{id}
+	</select>
+	
+	<!-- id가 존재하는가?-->
+	<select id="existNick" resultType="String">
+		SELECT 
+			CASE WHEN count(id)=1 then 'TRUE' else 'FALSE' end as exist  
+		FROM bookcm.member
+		WHERE nickName = #{nickName}
+	</select>
+	
+	
+	<!-- id 와 password가 일치하는가?  -->
+	<select id="checkLogin" resultType="String">
+		SELECT CASE WHEN count(id)=1 then 'TRUE' else 'FALSE' end as exist  
+		FROM (
+		  SELECT * 
+		  FROM bookcm.member
+		  WHERE id = #{id}
+		)b
+		WHERE password = #{password}
+	</select>
+	
+	<!-- 내정보 조회 -->
+	<select id="getMyInfo" resultType="com.goott.bookcm.domain.MemberVO">
+		select * from bookcm.member
+		where id = #{id} and member_yn='Y'
+	</select>
+	
+	<!-- 회원가입 -->
+	<insert id="regMember">
+	INSERT INTO bookcm.member
+	VALUES (#{id}, #{password}, #{name}, #{nickName}, <!-- 아이디, 비밀번호, 이름, 닉네임 -->
+			#{email}, #{phone}, default, <!-- 이메일, 핸드폰번호, 등급 -->
+			default, default, 'member0', <!-- 가입날짜, 수정날짜, 수정회원(로그인정보) -->
+			default, default <!-- 관리자여부, 탈퇴여부 -->
+	)
+	</insert>
+	
+	<!-- 내정보 조회 -->
+	<select id="getGrade" resultType="String">
+		select grade 
+		from bookcm.member
+		where id = #{loginId}
+	</select>
+	
+	
+	
 </mapper>

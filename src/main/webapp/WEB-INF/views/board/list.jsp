@@ -29,6 +29,7 @@
 						<button class="btn btn-info">검색 </button>
 					</div><p style="clear:right;" />
 					<div class="hiddenValue">
+						<input type="hidden" name="colList" value="${pageMaker.cri.colList}">
 						<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
 						<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
 					</div>
@@ -88,8 +89,7 @@
 						<c:if test="${pageMaker.next}">
 							<li class="paginate_button page-item next">
 								<a href="${ pageMaker.endPage +1 }" aria-controls="dataTable" 
-									data-dt-idx="${pageMaker.endPage +1}" tabindex="${pageMaker.endPage +1}" 
-										class="page-link">다음</a>
+									data-dt-idx="${pageMaker.endPage +1}" tabindex="${pageMaker.endPage +1}" class="page-link">다음</a>
 							</li>
 						</c:if>
 					</ul>
@@ -112,7 +112,7 @@
 			      
 			      </div>
 			      <div class="modal-footer">
-			        <button type="button" class="btn btn-secondary close" data-dismiss="modal">닫기</button>
+			      	<button type="button" class="btn btn-primary close" data-dismiss="modal">닫기</button>
 			      </div>
 			    </div>
 			  </div>
@@ -125,6 +125,7 @@
 				<input type="hidden" name="amount" value="${pageMaker.cri.amount}">
 				<input type="hidden" name="type" value="${pageMaker.cri.type}">
 				<input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
+				<input type="hidden" name="colList" value="${pageMaker.cri.colList}">
 			</form>
 			
 		</div><!-- ./card-body -->

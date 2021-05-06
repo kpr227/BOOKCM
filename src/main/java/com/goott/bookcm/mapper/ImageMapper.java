@@ -16,4 +16,7 @@ public interface ImageMapper {
 	
 	//bno에 등록된 사진 지우기
 	public int delAllImgae(Long bno);
+	
+	//어제 등록했던 파일 가져오기
+	public List<ImageVO> getYesterdayImage();
 }

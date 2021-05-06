@@ -24,10 +24,10 @@
 						<input class="data-non form-control col-3" id="bno" name="bno" value="${boardVO.bno}" disabled>
 						
 						<select class="data-mod form-control col-2 offset-md-1" id="colList" name="colList" disabled>
-							<option value="1" <c:if test="${boardVO.colList == '1'}">selected</c:if> >공지사항</option>
-							<option value="2" <c:if test="${boardVO.colList == '2'}">selected</c:if> >책 추천</option>
-							<option value="3" <c:if test="${boardVO.colList == '3'}">selected</c:if> >일반</option>
-							<option value="4" <c:if test="${boardVO.colList == '4'}">selected</c:if> >문의사항</option>
+							<option value="1" <c:if test="${boardVO.colList == '0'}">selected</c:if> >공지사항</option>
+							<option value="2" <c:if test="${boardVO.colList == '1'}">selected</c:if> >책 추천</option>
+							<option value="3" <c:if test="${boardVO.colList == '2'}">selected</c:if> >일반</option>
+							<option value="4" <c:if test="${boardVO.colList == '3'}">selected</c:if> >문의사항</option>
 						</select>
 						<input type="hidden" id="colList_origin" name="colList_origin" value="${boardVO.colList}">
 						<input class="data-non form-control col-2 offset-md-1" id="writer" name="writer" value="${boardVO.writer}" disabled>  
@@ -108,11 +108,10 @@ var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");	// 파일 유효성 검사
 var maxSize = 5242880;		//최대 파일 등록
 var clonObj = $(".uploadDiv").clone();	//파일 첨부 리셋
 var uploadResult = $(".uploadResult");	//파일 chat
+var listLen;
 
 $(document).ready(function(){
-	//var bno = $("#bno").val();
-	//console.log(bno_value);
-	//alert(typeof(bno_value));
+
 	image.getImage(
 		bno_value,
 		function(list){
@@ -120,6 +119,99 @@ $(document).ready(function(){
 		}
 	)
 });
+
+/* 파일 선택 리스트 */
+function checkExtension(fileName, fileSize){
+	if(fileSize >= maxSize){
+		alert("파일 사이즈 초과");
+		return false;
+	}
+	
+	if(regex.test(fileName)){
+		alert("해당 종류의 파일은 업로드 할 수 업슷비다.");
+		return false;
+	}
+	return true;
+}
+
+/* 파일 변경 이벤트  */
+$("input[type='file']").change(function(e){
+	alert("성공");
+	var formData = new FormData();
+	
+	var inputFile = $("input[name='uploadFile']");
+	
+	var files = inputFile[0].files;
+	
+	console.log(files);
+	
+	for(var i=0; i<files.length; i++){
+		if(!checkExtension(files[i].name, files[i].size)){
+			return false;
+		}
+		
+		formData.append("uploadFile", files[i]);
+	}
+	
+	image.regImage(
+		formData, 		
+		function(result){		
+			showUpload(result);
+			$(".uploadDiv").html(clonObj.html());
+		}
+	);
+	
+});
+
+/* 썸네일 올리기 */
+function showUpload(uploadResultArr){
+	if(!uploadResultArr || uploadResultArr.length == 0) {return};
+	
+	
+	alert("성공");
+	var uploadResult = $(".uploadResult");
+	
+	var str = "<ul>";
+	
+	$(uploadResultArr).each(function(i,obj){
+		var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
+		var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+		
+		alert(obj.image);
+		
+		if(!obj.image){
+			str +="<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"'"
+				+ "		data-fileName='"+obj.fileName+"' data-type='file'>"
+				+ "	<img src='/resources/img/file.png'><br/>"+ obj.fileName
+				+ "	<span class='checkBtn-imageSelect'> "
+				+ "		<button type='button' class='btn btn-danger btn-circle' data-file=\'"+fileCallPath+"\'"
+				+ "			 	data-type='file' data-name='"+obj.fileName+"'>"
+				+ "			<i class='fa fa-times'></i>"
+				+ "		</button>"
+				+ "	</span>"
+				+"</li>";
+		}else{
+			//str += "<li>"+ obj.fileName +"&nbsp;&nbsp; </li>";
+			var fileCallPath_s = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);			
+			var originPath=obj.uploadPath+"\\"+obj.uuid+"_"+obj.fileName;			
+			originPath = originPath.replace(new RegExp(/\\/g),"/");
+			
+			str +="<li data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"'"
+				+ "		data-fileName='"+obj.fileName+"' data-type='image'>"
+				+ "	<img src='/display?fileName="+fileCallPath_s+"'><br/>"+obj.fileName +"&nbsp;&nbsp;"
+				+ "	<span class='checkBtn-imageSelect'> "
+				+ "		<button type='button' class='btn btn-danger btn-circle'"
+				+ "				data-file=\'"+fileCallPath+"\' data-type='image' data-name='"+obj.fileName+"'>"
+				+ "			<i class='fa fa-times'></i>"
+				+ "		</button>"
+				+ "	</span>"
+				+ "</li>";
+			
+		}
+	});
+	str += "</ul>"
+	uploadResult.append(str);
+}
 
 
 /* 이미지 출력 */
@@ -129,24 +221,24 @@ function showUploadFile(imageFile){
 	var str = "<ul>";
 	
 	$(imageFile).each(function(i,imageObj){
-		console.log(imageObj.uuid);
-		console.log(imageObj.fileName);
-		console.log(imageObj.uploadPath);
+		//console.log(imageObj.uuid);
+		//console.log(imageObj.fileName);
+		//console.log(imageObj.uploadPath);
 		//alert(obj.image);
 		var fileCallPath = encodeURIComponent(imageObj.uploadPath+"/"+imageObj.uuid+"_"+imageObj.fileName);
 		var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
 		
 		if(!imageObj.fileType || imageObj.fileType=="file"){
 			str +="<li data-path='"+imageObj.uploadPath+"' data-uuid='"+imageObj.uuid+"'"
-				+ "		data-fileName='"+imageObj.fileName+"' data-type='file'>"
+				+ "		data-fileName='"+imageObj.fileName+"' data-type='file' class='image_dis'>"
 				+ "	<img src='/resources/img/file.png'><br/>"+ imageObj.fileName
 				+ "	<span class='checkBtn-imageSelect'> "
 				+ "	<button type='button' class='btn btn-danger btn-circle data-dis' "
-				+ "			data-file=\'"+fileCallPath+"\' data-type='file'>"
+				+ "			data-file=\'"+fileCallPath+"\' data-type='file' data-name='"+imageObj.fileName+"'>"
 				+ "		<i class='fa fa-times'></i>"
 				+ "	</button>"
 				+ "</span>"
-				+"</li>";
+				+ "</li>";
 		}else{
 			//str += "<li>"+ obj.fileName +"&nbsp;&nbsp; </li>";
 			var fileCallPath_s = encodeURIComponent(imageObj.uploadPath+"/s_"+imageObj.uuid+"_"+imageObj.fileName);		
@@ -154,12 +246,12 @@ function showUploadFile(imageFile){
 			
 			originPath = originPath.replace(new RegExp(/\\/g),"/");
 			str +="<li data-path='"+imageObj.uploadPath+"' data-uuid='"+imageObj.uuid+"'"
-				+ "		data-fileName='"+imageObj.fileName+"' data-type='image'>"
+				+ "		data-fileName='"+imageObj.fileName+"' data-type='image' class='image_dis'>"
 				+ "	<img src='/display?fileName="+fileCallPath_s+"'><br/>"+imageObj.fileName +"&nbsp;&nbsp;"
 				+ "	<span class='checkBtn-imageSelect' data-fileCallPath='"+fileCallPath_s+"'> "
 				+ "<input type='hidden' class='fileCallPath' value='"+fileCallPath_s+"'>"
 				+ "	<button type='button' class='btn btn-danger btn-circle data-dis'"
-				+ "			data-file=\'"+fileCallPath+"\' data-type='image'>"
+				+ "			data-file=\'"+fileCallPath+"\' data-type='image' data-name='"+imageObj.fileName+"'>"
 				+ "		<i class='fa fa-times'></i>"
 				+ "	</button></span>"
 				+ "</li>";
@@ -171,25 +263,38 @@ function showUploadFile(imageFile){
 		uploadResult.append(str);
 }
 
-/* 파일 삭제 */
-$(".uploadResult").on("click","span", function(e){
-	var targetFile = $(this).data("fileName");
-	console.log("fileName의 값은?: "+targetFile);
-	var type=$(this).data("type");
-	console.log("type의 값은?: "+type);
-
-	//$.ajax({
-	//	url:"/deleteFile",
-	//	data: {fileName:targetFile, type:type},
-	//	dataType:'text',
-	//	type: "POST",	
-	//	success:function(result){
-	//		alert("삭제 완료"+result);
-	//	}
-		
-	//}) //END $.ajax
+/* 첨부파일 삭제  처리 - x모양인 아이콘을 선택했을 떄 삭제*/
+$(".uploadResult").on("click", "button", function(){
+	console.log("delete file");
+	
+	var targetFile =$(this).data("file");
+	var targetFileName =$(this).data("name");
+	var type = $(this).data("type");
+	var targetLi =$(this).closest("li");
+	if(confirm(targetFileName+"사진을 삭제하시겠습니까?")){
+		targetLi.remove();
+	}
+	
+	
+	/*
+	$.ajax({
+		url:'/deleteFile',
+		data:{fileName:targetFile, type:type},
+		beforeSend:function(xhr){
+			xhr.setRequestHeader(csrfHeaderName, csrfTokenValue);
+		},
+		dataType:'text',
+		type:'POST',
+		success:function(result){
+			alert(result);
+			//li삭제
+			targetLi.remove();
+		}
+	});
+	*/
 	
 });
+
 
 //수정버튼 선택
 $("#btn_modify").on("click", function(){
@@ -197,18 +302,20 @@ $("#btn_modify").on("click", function(){
 	//버튼
 	$(".checkBtn-select").css("display","none");
 	$(".checkBtn-confirm").css("display","block");
+	
 	//image버튼
 	$(".data-dis").css("display","inline");
 	
 	//disabled-> 수정가능하게
 	$(".data-mod").attr("disabled",false);
 	
+
 });
 
 //확인버튼 선택
 $("#btn_confirm").on("click", function(){	
 
-	
+	var array=[];
 	var boardVO = {
 		bno : bno_value,
 		title : $("#title").val(),
@@ -216,7 +323,44 @@ $("#btn_confirm").on("click", function(){
 		colList : $("#colList").val(),
 	}
 	
+	$(".uploadResult ul li").each(function(i, obj){
+		
+		
+		var jobj = $(obj);
+		var typeName = "";
+		
+		
+		if(jobj.data("type") == true || jobj.data("type")=="image"){
+			typeName = "image"
+		}else{
+			typeName = "file"
+		}
+		
+		alert(jobj.attr("disabled"));
+		if(!jobj.attr("disabled")){
+			array[i]={		
+					fileName : jobj.data("filename"),
+					uuid : jobj.data("uuid"),
+					uploadPath : jobj.data("path"),
+					fileType : typeName
+			}
+		}
+	});
+	
+	for(var i=0; i<array.length; i++){
+		console.log(JSON.stringify(array[i]));
+	}
+	
+	image.modImage(
+		bno_value,
+		array,
+		function(data){
+			alert(data);
+		}
+	)
+	
 	//ajax사용
+	
 	board.modBoard(
 		boardVO,
 		function(data){
@@ -232,13 +376,18 @@ $("#btn_confirm").on("click", function(){
 	$(".checkBtn-select").css("display","block");
 	$(".checkBtn-confirm").css("display","none");
 	
+	//image버튼
+	$(".data-dis").css("display","none");
+	
 	//input: disabled -변경
 	$(".data-mod").attr("disabled",true);
 });
 
 //취소버튼 확인 
 $("#btn_cancel").on("click", function(){
-	//origin값 넣기
+	window.location.reload();
+	/*
+	//origin값 수정한 값에 넣기
 	$("#colList").val($("#colList_origin").val());
 	$("#title").val($("#title_origin").val());
 	$("#content_").val($("#content_origin").val());
@@ -246,11 +395,17 @@ $("#btn_cancel").on("click", function(){
 	//버튼
 	$(".checkBtn-select").css("display","block");
 	$(".checkBtn-confirm").css("display","none");
+
 	//image버튼
 	$(".data-dis").css("display","none");
 	
 	//input: disabled -변경
 	$(".data-mod").attr("disabled",true);
+	
+	//disabled된 파일(삭제한 파일) 되돌리기
+	$(".image_dis").css("display","inline");
+	$(".image_dis").attr("disabled",true);
+	*/
 });
 
 //목록 이동

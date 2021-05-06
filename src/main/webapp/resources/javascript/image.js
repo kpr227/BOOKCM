@@ -66,16 +66,36 @@ var image = (function(){
 					console.log("getImage ERROR");
 			}
 			
-			
 		});
 	}
 	
+	// 수정할 이미지 등록하기
+	function modImage(bno, imageVO, callback, error){	
+		$.ajax({
+			url:'/board/modImage/'+bno,
+			data:JSON.stringify(imageVO),	//자바스크립트 객체를 JSON형식의 문자열로 반환한다.
+			contentType:"application/json; charset=UTF-8",
+			type:'POST',
+			
+			success:function(data){
+				console.log(data);
+				callback(data);
+			},
+			
+			error:function(xhr,status,err){
+				console.log(err);
+					console.log("modImage ERROR");
+			}
+			
+		});
+	}
 	
 	
 	return{
 		regImage:regImage,
 		delImage:delImage,
 		getImage:getImage,
+		modImage:modImage,
 	};
 	
 	

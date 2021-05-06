@@ -59,6 +59,7 @@ var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
 var maxSize = 5242880;
 var clonObj = $(".uploadDiv").clone();
 var uploadResult = $(".uploadResult");
+var loginId = "${loginId}";
 
 /* 카테고리 선택 */
 $("#colList").on("change", function(){
@@ -90,7 +91,7 @@ function general(){
 		+ "</div><hr/>"
 		+ "<div class='form-group'>"
 		+ "	<label>작성자</label> "
-		+ "	<input class='form-control' id='writer'  name='writer' value='member0' readOnly>"
+		+ "	<input class='form-control' id='writer'  name='writer' value='"+loginId+"' readOnly>"
 		+ "</div> <hr/>";
 	
 	$(".registerChat").html("");

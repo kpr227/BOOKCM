@@ -2,6 +2,7 @@ package com.goott.bookcm.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,24 +20,31 @@ public class BoardServiceImple implements BoardService{
 	@Autowired
 	private ImageMapper imageMapper;
 	
-	// 전체 게시물 읽어오기  paging x search x
+	// 전체 게시물 읽어오기  paging x search x colList x
 	@Override
 	public List<BoardVO> getList() {
 		return boardMapper.getList();
 	}
 
-	//전체 게시물 읽어오기 paging o search x
+	//전체 게시물 읽어오기 paging o search x colList x
 	@Override
 	public List<BoardVO> getList_p(Criteria cri) {
 		// TODO Auto-generated method stub
 		return boardMapper.getList_p(cri);
 	}
 	
-	//전체 게시물 읽어오기 paging o search o
+	//전체 게시물 읽어오기 paging o search o colList x
 	@Override
 	public List<BoardVO> getList_ps(Criteria cri) {
 		// TODO Auto-generated method stub
 		return boardMapper.getList_ps(cri);
+	}
+	
+	//전체 게시물 읽어오기 paging o search o colList o
+	@Override
+	public List<BoardVO> getList_psc(Criteria cri) {
+		// TODO Auto-generated method stub
+		return boardMapper.getList_psc(cri);
 	}
 	
 	//전체 게시물 갯수 읽기
@@ -46,11 +54,18 @@ public class BoardServiceImple implements BoardService{
 		return boardMapper.getTotalBoard();
 	}
 	
-	//전체 게시물 갯수 읽기
+	//전체 게시물 갯수 읽기 paging o search o 
 	@Override
 	public int getTotalBoard_s(Criteria cri) {
 		// TODO Auto-generated method stub
 		return boardMapper.getTotalBoard_s(cri);
+	}
+	
+	//전체 게시물 갯수 읽기 paging o search o colList o
+	@Override
+	public int getTotalBoard_sc(Criteria cri) {
+		// TODO Auto-generated method stub
+		return boardMapper.getTotalBoard_sc(cri);
 	}
 	
 	//게시물 생성
@@ -95,11 +110,22 @@ public class BoardServiceImple implements BoardService{
 		return imageMapper.getImageBno(bno);
 	}
 	
-	//특정 게시물 파일 전체 삭제
+	//특정 게시물 파일 수정
 	@Override
-	public boolean deleteAll(Long bno) {
-		// TODO Auto-generated method stub
-		return imageMapper.delAllImgae(bno) == 1;
+	public int modImage(Long bno, List<ImageVO> ImageList) {
+		imageMapper.delAllImgae(bno);
+		
+		ImageList.forEach(image ->{
+			image.setBno(bno);
+			image.setUuid(image.getUuid());
+			image.setUploadPath(image.getUploadPath());
+			image.setFileName(image.getFileName());
+			image.setFileType(image.getFileType());
+			
+			imageMapper.regImage(image);
+		});
+
+		return 1;
 	}
 
 	//게시물 수정
@@ -127,6 +153,15 @@ public class BoardServiceImple implements BoardService{
 		
 		return result;
 	}
+
+	//추천수 History에 존재하는가
+	@Override
+	public String existThumbs(@Param("bno")Long bno, @Param("loginId")String loginId) {
+		boardMapper.existThumbs(bno, loginId);
+		return null;
+	}
+
+
 
 
 	

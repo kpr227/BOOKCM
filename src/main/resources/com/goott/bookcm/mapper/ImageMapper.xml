@@ -24,14 +24,20 @@
 		WHERE uuid = #{uuid}
 	</delete>
 	
-	<!-- bno에 등록된 사진 모두 지우기 -->
+	<!-- bno에 등록된 파일 모두 지우기 -->
 	<delete id="delAllImgae">
 		DELETE 
 		FROM bookcm.image 
 		WHERE bno = #{bno}
 	</delete>
-	<!--  -->
 	
-	<!--  -->
+	<!-- 어제 등록했던 파일 가져오기 -->
+	<select id="getYesterdayImage" resultType="com.goott.bookcm.domain.ImageVO">
+		 SELECT * 
+		 FROM bookcm.image 
+		 WHERE uploadpath = TO_CHAR(sysdate -1 ,'yyyy\mm\dd') 
+	</select>
+
+
 	
 </mapper>

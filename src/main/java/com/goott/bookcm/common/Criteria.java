@@ -16,6 +16,8 @@ public class Criteria {
 	private String type;	//검색범위(searchScope c:content t:title w:writer)
 	private String keyword;
 	
+	private String colList;	//[0]공지사항 [1] 책추천  [2] 일반게시판 [3] 문의 게시판
+	
 	public Criteria() {
 		this(1,5);			//게시물 번호를 입력
 	}
