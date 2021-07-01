@@ -4,8 +4,13 @@
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <%@include file="../include/header.jsp" %>
 
+<div class="font">
+	<img  src="${contextPath}/resources/img/mainIcon.jpg" width="600" >
+</div> <p/>
 <form id="" action="${contextPath}/main/login" method="post">
-	<input type="submit" id="test" value="로그인페이지" />
+	<div class="font">
+		<input type="submit" id="test" value="로그인페이지" />
+	</div>
 </form>
 
 

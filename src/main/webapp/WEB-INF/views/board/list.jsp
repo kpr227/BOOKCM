@@ -70,7 +70,12 @@
 				
 				<!-- paging 처리 시작 -->
 				<div class="dataTables_paginate paging_simple_numbers pull-right" id="dataTable_paginate">
-				<input type="button" class="btn btn-primary" id="register" name="register" value="글쓰기" >
+				
+				<!-- session 값이 존재하는지 여부 판단 후 글쓰기 버튼 활성화 -->
+				<c:if test="${loginId ne null}">
+					<input type="button" class="btn btn-primary" id="register" name="register" value="글쓰기" >
+				</c:if>
+				
 					<ul class="pagination" style="float:right">
 						<c:if test="${pageMaker.prev}">
 							<li class="paginate_button page-item previous">

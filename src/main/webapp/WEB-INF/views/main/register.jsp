@@ -176,9 +176,10 @@ function checkId(){
 //비밀번호 일치 여부판단
 function checkPassword(){
 	result2 = false;
-	var regExpPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;	//최소4자 문자 및 숫자 1개씩을 들어가야함
-	//console.log($("#password").val());
-	//console.log($("#password_c").val());
+	
+	//최소4자 문자 및 숫자 1개씩을 들어가야함
+	var regExpPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{4,}$/;	
+
 	if(regExpPassword.test($("#password").val())){
 		if($("#password").val() == $("#password_c").val()){
 			result2 = true;
@@ -194,7 +195,6 @@ function checkPassword(){
 		$(".pwChat").css("color","red");
 		$(".pwChat").html("형식에 일치하지않는 비밀번호입니다.");
 	}
-	
 }
 
 //닉네임 존재여부 판단
@@ -222,7 +222,6 @@ function checkNick(){
 //이메일 유효성 검사 판단
 function checkEmail(){
 	var email_value = ($("#email").val());
-	//var regExpEmail = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
 	var regExpEmail = /^[a-zA-Z0-9]+@[a-zA-Z0-9]+.[a-zA-Z]{2,3}$/;
 	result4 = false;
 	

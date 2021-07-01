@@ -298,7 +298,6 @@ $(".uploadResult").on("click", "button", function(){
 
 //수정버튼 선택
 $("#btn_modify").on("click", function(){
-	
 	//버튼
 	$(".checkBtn-select").css("display","none");
 	$(".checkBtn-confirm").css("display","block");
@@ -308,8 +307,6 @@ $("#btn_modify").on("click", function(){
 	
 	//disabled-> 수정가능하게
 	$(".data-mod").attr("disabled",false);
-	
-
 });
 
 //확인버튼 선택
@@ -386,26 +383,6 @@ $("#btn_confirm").on("click", function(){
 //취소버튼 확인 
 $("#btn_cancel").on("click", function(){
 	window.location.reload();
-	/*
-	//origin값 수정한 값에 넣기
-	$("#colList").val($("#colList_origin").val());
-	$("#title").val($("#title_origin").val());
-	$("#content_").val($("#content_origin").val());
-	
-	//버튼
-	$(".checkBtn-select").css("display","block");
-	$(".checkBtn-confirm").css("display","none");
-
-	//image버튼
-	$(".data-dis").css("display","none");
-	
-	//input: disabled -변경
-	$(".data-mod").attr("disabled",true);
-	
-	//disabled된 파일(삭제한 파일) 되돌리기
-	$(".image_dis").css("display","inline");
-	$(".image_dis").attr("disabled",true);
-	*/
 });
 
 //목록 이동
